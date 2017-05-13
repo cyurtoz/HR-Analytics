@@ -110,25 +110,5 @@ public class FindWhoWillLeave {
 			return distribution;
 		}
 	}
-
-
-	public static class FixedPriorityQueue<E> extends PriorityQueue<E> {
-
-		private static final long serialVersionUID = 1L;
-
-		private final int fixedsize;
-
-		public FixedPriorityQueue(int n) {
-			super(n);
-			fixedsize = n;
-		}
-
-		@Override
-		public boolean add(E e) {
-			if (this.size() >= fixedsize) {
-				return false;
-			}
-			return super.add(e);
-		}
-	}
+	
 }
