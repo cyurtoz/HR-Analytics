@@ -6,11 +6,8 @@ import weka.classifiers.functions.Logistic;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /**
@@ -27,34 +24,13 @@ public class FindWhoWillLeave {
 		final Instances instancesNew = new Instances(new InputStreamReader(resourceAsStream));
 		instancesNew.setClassIndex(6);
 
-		PriorityQueue<ExtendedInstance> logisticQueue = new PriorityQueue<ExtendedInstance>(new
-																								 Comparator<ExtendedInstance>() {
-			public int compare(ExtendedInstance o1, ExtendedInstance o2) {
-				try {
-					final double v1 = logistic.distributionForInstance(o1.getInstance())[1];
-					final double v2 = logistic.distributionForInstance(o2.getInstance())[1];
-					return Double.compare(v1, v2);
-				} catch (Exception e) {
-					return 0;
-				}
-			}
-		});
-
-		PriorityQueue<ExtendedInstance> nbQueue = new PriorityQueue<ExtendedInstance>(new Comparator<ExtendedInstance>
-				() {
-			public int compare(ExtendedInstance o1, ExtendedInstance o2) {
-				try {
-					final double v1 = nb.distributionForInstance(o1.getInstance())[1];
-					final double v2 = nb.distributionForInstance(o2.getInstance())[1];
-					return Double.compare(v1, v2);
-				} catch (Exception e) {
-					return 0;
-				}
-			}
-		});
 
 		logistic.buildClassifier(instancesNew);
 		nb.buildClassifier(instancesNew);
+
+		PriorityQueue<ExtendedInstance> logisticQueue = createQueue(logistic);
+
+		PriorityQueue<ExtendedInstance> nbQueue = createQueue(nb);
 
 		process(instancesNew, nb, nbQueue);
 		process(instancesNew, logistic, logisticQueue);
@@ -63,6 +39,18 @@ public class FindWhoWillLeave {
 		printQueue(nbQueue);
 
 
+	}
+
+	private static PriorityQueue<ExtendedInstance> createQueue(final Classifier clz) {
+		return new PriorityQueue<>((o1, o2) -> {
+			try {
+				final double v1 = clz.distributionForInstance(o1.getInstance())[1];
+				final double v2 = clz.distributionForInstance(o2.getInstance())[1];
+				return Double.compare(v1, v2);
+			} catch (Exception e) {
+				return 0;
+			}
+		});
 	}
 
 	private static void printQueue(PriorityQueue<ExtendedInstance> logisticQueue) {

@@ -49,11 +49,11 @@ public class ClassifyNewInstance {
 
 
 		while (true) {
-			System.out.print("\n\n Enter your comma separated input, ? for the the class(left) attribute: \n");
-			System.out.print("\n\n satisfactionLvl,perf_score,number_project,avg_montly_hours, " +
+			System.out.print("\n Enter your comma separated input, ? for the the class(left) attribute: \n");
+			System.out.print("\n satisfactionLvl,perf_score,number_project,avg_montly_hours, " +
 					"years_spent, work_accident,left," +
 					" promoted_5_years," +
-					" sales,salary\n");
+					" dept,salary\n");
 
 			String input = sc.nextLine();
 			input = prepareArff(input);
@@ -68,10 +68,10 @@ public class ClassifyNewInstance {
 			} else {
 				final double v = rf.classifyInstance(instances1Filtered.instance(0));
 				if (v == 0) {
-					System.out.println("This Employee will STAY");
+					System.out.println("--> This Employee will STAY");
 
 				} else {
-					System.out.println("This Employee will LEAVE");
+					System.out.println("--> This Employee will LEAVE");
 
 				}
 
